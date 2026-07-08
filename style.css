@@ -455,6 +455,7 @@ em { font-style: italic; }
   position: relative;
   z-index: 2;
 }
+.proof .container { max-width: 1440px; }
 .ba-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
