@@ -1,188 +1,111 @@
-# Clínica Florence · Dra. Joanna Loppes — Landing Page
+# Dra. Raquel Fialeki — Landing Page
 
-Landing page estática (HTML + CSS, sem framework) para captação de leads da
-**Clínica Florence · Dra. Joanna Loppes — Harmonização Corporal Avançada** (Petrolina-PE).
+Landing page de captação de leads para a **Dra. Raquel Fialeki**, especialista em **Otomodelação** e responsável pelo método autoral **Otoslim** (correção de orelhas de abano sem cirurgia).
 
 ---
 
-## 📁 Estrutura de arquivos
+## 📁 Estrutura de pastas
 
 ```
-Joana/
-├── index.html              → página principal (hero, antes/depois, formulário, sobre, FAQ)
-├── obrigado.html           → página de agradecimento (pós-envio do formulário)
-├── styles.css              → todos os estilos (tokens de tema, layout, responsivo)
-├── .htaccess               → regras de URL (remove .html, serve em subpasta)
-├── assets/                 → imagens herdadas (NÃO usadas — substituídas por placeholders)
-├── meta-capi/              → Pixel + CAPI em PHP puro (versão p/ a landing estática)
-│   ├── capi.php
-│   └── capi.js
-├── meta-pixel-geovana/     → mesma integração, mas como plugin WordPress (herdado)
-│   ├── meta-pixel-geovana.php
-│   └── capi.js
-└── meta-pixel-geovana.zip  → o plugin WordPress compactado, pronto p/ instalar
+Raquel/
+├── index.html          # Estrutura semântica das 5 dobras + modais de Termos/Privacidade
+├── style.css            # Design system + componentes + responsividade
+├── app.js                # Reveals, máscara de WhatsApp, validação e submit do form, modais
+├── README.md             # Este arquivo
+├── obrigado/
+│   └── index.html        # Página de obrigado (redirecionada após o envio do formulário)
+└── assets/
+    ├── img.webp                    # Hero (foto Dra. Raquel)
+    ├── dra-raquel-editorial.webp   # Foto editorial para a seção "Sobre"
+    ├── antes-01..04.webp           # Antes/depois — lado A
+    └── depois-01..04.webp          # Antes/depois — lado B
 ```
 
-> ⚠️ Há **duas implementações** do Pixel/CAPI na pasta (`meta-capi` em PHP puro e
-> `meta-pixel-geovana` como plugin WordPress). Use **uma** conforme onde a página
-> roda — ver seção Rastreamento e Pendências.
+> Todas as imagens referenciadas em `index.html` apontam para a pasta `assets/`.
 
 ---
 
-## 🖼️ Imagens (placeholders)
+## 🎨 Design system
 
-As fotos do projeto anterior **não são exibidas**. Todas as imagens do site (3 cards
-de antes/depois, foto da doutora e fundo do hero) usam **placeholders em gradiente
-roxo** com o rótulo "Foto em breve".
+| Token            | Valor       | Uso                                        |
+|------------------|-------------|---------------------------------------------|
+| `--c-primary`    | `#EDBC8E`   | Botões, badges, destaques, gradiente quente |
+| `--c-secondary`  | `#EAE5D8`   | Fundos sutis, placeholders                  |
+| `--c-accent`     | `#1C1712`   | Texto principal, CTA escuro                 |
+| `--c-bg`         | `#FDFAF5`   | Fundo padrão                                |
+| `--c-text`       | `#1C1712`   | Texto                                       |
 
-- Os arquivos `.png` herdados continuam na pasta `assets/`, mas **não são referenciados**
-  por nenhum HTML/CSS.
-- Quando as fotos da Dra. Joanna chegarem, basta inserir as novas imagens e reconectar
-  os trechos (cards em `index.html` e o `.hero-bg-img` em `styles.css`).
-
----
-
-## 🚀 Como o site é publicado (IMPORTANTE)
-
-O site **não fica na raiz do domínio**. Ele é enviado para uma **subpasta** dentro
-de `public_html`, ao lado de um **WordPress que ocupa a raiz** (mesmo modelo dos
-outros projetos).
-
-```
-public_html/
-├── (WordPress: wp-admin, wp-content, wp-includes, ...)  ← raiz do domínio
-└── subpasta/        ← AQUI vão os arquivos desta landing
-    ├── index.html
-    ├── obrigado.html
-    ├── styles.css
-    ├── .htaccess
-    ├── assets/
-    └── meta-capi/   (se usar o Pixel via PHP puro)
-```
-
-Portanto a landing abre em `dominio.com.br/subpasta/` e a página de obrigado em
-`dominio.com.br/subpasta/obrigado`. **Testar `/obrigado` na raiz dá 404** — lá é o
-WordPress, não esta landing.
-
-> Ao subir arquivos, envie **todos** (incl. `.htaccess`, que é oculto — ligue
-> "mostrar arquivos ocultos" no Gerenciador de Arquivos/FTP).
+- **Fontes:** Playfair Display (serif, headings) + Inter (sans, corpo) — via Google Fonts.
+- **Efeitos:** glassmorphism (`backdrop-filter: blur`), sombras suaves em camadas (`--shadow-sm/md/lg/glow`).
+- **Favicon:** SVG inline com a inicial **R** sobre o tom primário.
 
 ---
 
-## 🔗 .htaccess · URLs limpas
+## 🧩 Seções da LP
 
-O `.htaccess` faz, com caminhos **relativos** (funciona em qualquer subpasta e nunca
-redireciona pra raiz / WordPress):
+### 🟠 Dobra 1 — Hero
+- **Imagens:** `assets/img.webp`.
+- CTA primário (`#agendar`) e CTA fantasma (`#resultados`).
 
-1. Remove a extensão: `/subpasta/obrigado.html` → `/subpasta/obrigado`
-2. Serve internamente o arquivo: `/subpasta/obrigado` entrega `obrigado.html`
+### 🟠 Dobra 2 — Prova Social
+- **Imagens:** `assets/antes-0[1-4].webp` e `assets/depois-0[1-4].webp`.
+- Grid 2×2 de pares antes/depois com legenda.
 
-Há também um bloco de **forçar HTTPS comentado** — só descomente **depois** que o
-SSL estiver instalado no painel da hospedagem (senão o site fica inacessível).
+### 🟠 Dobra 3 — Formulário (captação)
+- **Campos:** Nome, WhatsApp (máscara `(00) 00000-0000`), "Quem realizará o procedimento" (select).
+- Validação client-side em `app.js`. Ao validar com sucesso, redireciona para `obrigado/`.
+- **Sem integração de envio configurada no momento** — o formulário hoje não envia os dados para nenhum webhook/CRM/planilha. A integração (Make.com, GTM, etc.) será feita posteriormente.
 
----
+### 🟠 Dobra 4 — Sobre a Mentora
+- **Imagens:** `assets/dra-raquel-editorial.webp`.
+- Copy de autoridade + stats + CTA escuro.
 
-## 📨 Formulário → Make → Planilha
-
-O formulário (`#contactForm` no `index.html`) envia por `fetch` (POST JSON) para um
-**webhook do Make**:
-
-```
-https://hook.us2.make.com/cjxjnd5wr41srcaf3bjtu8smsohiwym8
-```
-
-Campos enviados no payload:
-
-| Campo          | Origem                             |
-|----------------|------------------------------------|
-| `nome`         | input `#form-name`                 |
-| `telefone`     | input `#form-whatsapp`             |
-| `email`        | input `#form-email`                |
-| `procedimento` | select `#form-procedure`           |
-| `origem`       | URL da página                      |
-| `data`         | data do envio (ex: `12 jun. 2026`) |
-| `hora`         | hora do envio (ex: `09h30`)        |
-
-Opções do select de protocolo: **Harmonização Corporal (Combo Completo) ·
-Criolipólise / Criomodelagem · PEIM — Vasinhos · Redução de Medidas / Gordura
-Localizada · Não sei ainda, quero avaliação**.
-
-O mapeamento desses campos para as colunas da planilha (Google Sheets) é feito
-**dentro do cenário do Make**, não no código.
-
-Após o envio bem-sucedido, o usuário é redirecionado para **`obrigado`** (URL limpa).
+### 🟠 Dobra 5 — Rodapé
+- Endereço da clínica.
+- Barra inferior: copyright + CRM, e links de Termos de Uso / Política de Privacidade (abrem em modal) / Desenvolvido por AZX Performance — dispostos lado a lado em telas desktop e empilhados em telas pequenas.
 
 ---
 
-## 🙏 Página de obrigado
+## 📜 Termos de Uso & Política de Privacidade
 
-`obrigado.html` mostra a confirmação e um botão **"Falar pelo WhatsApp agora"**
-(`wa.me/...`) com mensagem pré-preenchida, além de um botão "Voltar para o site".
-
----
-
-## 🎨 Tema e identidade visual
-
-- Tema **claro por padrão** (`<html data-theme="light">`).
-- A preferência do usuário é salva em `localStorage` na chave `joanna-theme`.
-- Botão de alternância (sol/lua) no menu — o tema claro continua disponível.
-- **Paleta roxa/violeta** em degradê (token `--gold-grad`, herdado da fonte Clínica Florence):
-  - Roxo primário `#7937a3` · secundário `#c785e9` · accent `#d4a8f0`, sobre fundo escuro `#100220`.
-- Fonte única: **Montserrat** (títulos de destaque e texto), como na fonte original.
+Acessíveis via modal a partir dos links no rodapé (`#openTerms` / `#openPrivacy`). A Política de Privacidade é redigida com base na **LGPD (Lei nº 13.709/2018)**, cobrindo: dados coletados, finalidade do tratamento, base legal, compartilhamento, armazenamento/segurança e direitos do titular.
 
 ---
 
-## 📊 Rastreamento
+## 🔌 Integrações
 
-- **Google Tag Manager:** container `GTM-KVJVVKHN` no `<head>`.
-- **Meta Pixel + Conversions API:** instalado. Pixel ID `935011722874678`.
-  - Dispara **PageView** e **Lead** (após o envio bem-sucedido do formulário) com
-    **deduplicação por `event_id`** (navegador + CAPI), faz **hash SHA-256** do
-    e-mail/telefone no navegador e tem **rate limiting** por IP.
-  - O **token da CAPI fica só no servidor**, nunca no navegador.
-
-Há **duas formas** prontas na pasta — escolha conforme onde a página é servida:
-
-| Cenário                                  | Use                          | Como                                                                 |
-|------------------------------------------|------------------------------|----------------------------------------------------------------------|
-| Landing estática em subpasta              | `meta-capi/` (PHP puro)       | Subir a pasta junto da landing; o `index.html` já chama `capi.js` e o `<head>` tem o Pixel. |
-| Página rodando no WordPress da raiz       | `meta-pixel-geovana.zip` (WP) | WP Admin → Plugins → Adicionar novo → Enviar plugin → Ativar.        |
-
-> Não use as duas ao mesmo tempo na mesma página (dispararia o evento em duplicidade
-> sem o mesmo `event_id`).
+Google Tag Manager instalado (container `GTM-MJQJPGBC`), snippet no topo do `<head>` e o `<noscript>` logo após a abertura do `<body>` em `index.html`. Nenhum Pixel/Conversions API está instalado — caso necessário, o ponto de entrada é o submit handler em `app.js` (`form.addEventListener('submit', ...)`), logo após a validação client-side e antes do redirect para `obrigado/`.
 
 ---
 
-## ✅ Pendências / a confirmar
+## 📱 Responsividade
 
-- [ ] **Marca** — confirmar se o site deve liderar por "Dra. Joanna Loppes" (logo/título
-      atuais) ou "Clínica Florence" (rodapé/legal atuais). Hoje usa ambos.
-- [ ] **Fotos da Dra. Joanna** — hoje o site usa placeholders. Inserir as imagens
-      reais (antes/depois, foto da doutora, fundo do hero).
-- [ ] **Números da seção "Sobre"** — estão como placeholders `[X]+ anos` e
-      `[X mil]+ procedimentos`. Preencher com os valores reais.
-- [x] **Número de WhatsApp** — `obrigado.html` usa o link de chat oficial dela
-      (`api.whatsapp.com/message/TY7FPVLQATYBH1`).
-- [ ] **Webhook do Make** — confirmar se o webhook é mesmo desta clínica (é o mesmo de
-      outro projeto; pode ser cópia a revisar).
-- [ ] **Domínio + subpasta de produção** — confirmar a URL de publicação.
-- [ ] **SSL** — confirmar certificado ativo antes de descomentar o "forçar HTTPS".
-- [ ] **GTM** — confirmar se o container `GTM-KVJVVKHN` é desta clínica (mesmo ID
-      usado em outros projetos; pode ser cópia a revisar).
-- [ ] **Token da CAPI (CRÍTICO)** — `meta-pixel-geovana/meta-pixel-geovana.php` contém
-      um token em **texto puro** herdado de outro projeto. Gerar token novo no
-      Gerenciador de Eventos e substituir; tratar o antigo como comprometido.
-- [ ] **Escolher UMA implementação do Pixel** — `meta-capi` (PHP puro) p/ a landing
-      estática, OU o plugin WordPress; remover a que não for usada para evitar confusão.
-- [ ] **Renomear o plugin WordPress** — a pasta `meta-pixel-geovana/`, o `.zip` e os
-      prefixos internos (`geo_*`, `GEO_*`) ainda têm o nome de outro projeto; renomear
-      se for usado.
+| Faixa                | Comportamento                                          |
+|-----------------------|--------------------------------------------------------|
+| **≥ 1024px**          | Layouts em 2 colunas (hero, form, about); grid 2×2 nas provas |
+| **768–1023px**        | Mesmas grids mantidas, com `clamp()` reduzindo gaps     |
+| **≤ 880px**           | Hero, form e about colapsam para 1 coluna               |
+| **≤ 760px**           | Grid de provas vira 1 coluna                            |
+| **≤ 520px**           | Ajustes finos de tipografia e botões em largura total   |
+| **≤ 480px**           | Barra inferior do rodapé empilha em coluna              |
 
 ---
 
-## 🛠️ Rodar localmente
+## 🔒 Segurança
 
-Sirva a pasta com um servidor estático (ex.: `python -m http.server`).
-Obs.: o servidor estático local **ignora o `.htaccess`**, então as URLs limpas
-(`/obrigado` sem `.html`) só funcionam no servidor de produção (Apache). O endpoint
-PHP (`meta-capi/capi.php`) também só roda num servidor com PHP.
+- Sem `innerHTML`/`eval`/`document.write` no client-side (sem vetor de XSS via DOM).
+- Links externos (`target="_blank"`) sempre com `rel="noopener noreferrer"`.
+- Sem conteúdo via `http://` (mixed content).
+- Validação client-side do formulário em `app.js`; validação server-side deverá ser adicionada junto da integração de envio.
+
+---
+
+## 🤝 Como contribuir
+
+- **Adicionar uma nova seção:** crie o markup dentro de `index.html` entre duas dobras existentes, atribua um `data-screen-label="NN Nome"` e adicione as classes ao final de `style.css` seguindo o padrão `.nome-secao__elemento`.
+- **Mudar a paleta:** edite as custom properties no topo de `style.css` (`:root`).
+- **Mudar copy:** todas as strings estão diretamente em `index.html` — sem CMS / template engine.
+
+---
+
+© 2026 Dra. Raquel — Todos os direitos reservados.
